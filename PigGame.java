@@ -30,7 +30,6 @@ public class PigGame
 
     public boolean playerWon() {
         if(playerScore >= WINNING_SCORE) {
-            restart();
             return true;
         }
         else {
@@ -40,7 +39,6 @@ public class PigGame
 
     public boolean computerWon() {
         if(computerScore >= WINNING_SCORE) {
-            restart();
             return true;
         }
         else {
@@ -87,19 +85,18 @@ public class PigGame
 
     public void playerRolls() {
         System.out.println("PLAYER TURN");
-        while (!playerWon()) {
             playersTurn = true;
             rollDice();
             if ((d1.getValue()) == 1 || (d2.getValue() == 1)) {
                 roundScore = 0;
-                break;
+                playersTurn = false;
             }
             if ((d1.getValue() == 1) && (d2.getValue() == 1)) {
                 playerScore = 0;
+                playersTurn = false;
             } else {
                 playerScore = playerScore + roundScore;
             }
-        }
         if (playerWon()) {
             System.out.println("You won!");
         }
@@ -111,21 +108,19 @@ public class PigGame
         computerTurn();
     }
     public void computerTurn() {
-        System.out.println("COMPUTER TURN");
-        while (!computerWon()) {
+            System.out.println("COMPUTER TURN");
             playersTurn = false;
-            rollDice();
-            if ((d1.getValue()) == 1 || (d2.getValue() == 1)) {
-                roundScore = 0;
-                break;
-            }
-            if ((d1.getValue() == 1) && (d2.getValue() == 1)) {
-                computerScore = 0;
-            }
-            else {
-                computerScore = computerScore + roundScore;
-            }
-        }
+                rollDice();
+                if ((d1.getValue()) == 1 || (d2.getValue() == 1)) {
+                    roundScore = 0;
+                    playersTurn = true;
+                }
+                if ((d1.getValue() == 1) && (d2.getValue() == 1)) {
+                    computerScore = 0;
+                    playersTurn = true;
+                } else {
+                    computerScore = computerScore + roundScore;
+                }
         if (computerWon()) {
             System.out.println("Computer won!");
         }
@@ -146,7 +141,9 @@ public class PigGame
     }
     public void autoGame(){
         restart();
-        playerTurn();
-        computerTurn();
+        while (!playerWon() && ! computerWon()) {
+            playerTurn();
+            computerTurn();
+        }
     }
 }
