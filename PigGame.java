@@ -12,7 +12,7 @@ public class PigGame
         playerScore = 0;
         computerScore = 0;
         roundScore = 0;
-        playersTurn = false;
+        playersTurn = true;
         System.out.println("Welcome");
     }
     //Accessor Methods
@@ -30,6 +30,7 @@ public class PigGame
 
     public boolean playerWon() {
         if(playerScore >= WINNING_SCORE) {
+            restart();
             return true;
         }
         else {
@@ -39,6 +40,7 @@ public class PigGame
 
     public boolean computerWon() {
         if(computerScore >= WINNING_SCORE) {
+            restart();
             return true;
         }
         else {
@@ -46,15 +48,22 @@ public class PigGame
         }
     }
 
-   /* public boolean isPlayersTurn() {
+    public boolean isPlayerTurn() {
         //return true or false
         return playersTurn;
     }
     public GVdie getDie(int num) {
         //return requested die, either 1 or 2
-        return d1;
-    }*/
-
+        if (num == 1) {
+            return d1;
+        }
+        else if (num == 2) {
+            return d2;
+        }
+        else {
+            return null;
+        }
+    }
     //Mutator methods
     private void rollDice() {
         d1.roll();
@@ -66,6 +75,10 @@ public class PigGame
         else {
             roundScore += (d1.getValue() + d2.getValue());
         }
+        if ((d1.getValue() == 1) && (d2.getValue() == 1)) {
+            playerScore = 0;
+            roundScore = 0;
+        }
         System.out.println("Dice 1: " + d1.getValue());
         System.out.println("Dice 2: " + d2.getValue());
         System.out.println("Round Score: " + roundScore);
@@ -75,6 +88,7 @@ public class PigGame
     public void playerRolls() {
         System.out.println("PLAYER TURN");
         while (!playerWon()) {
+            playersTurn = true;
             rollDice();
             if ((d1.getValue()) == 1 || (d2.getValue() == 1)) {
                 roundScore = 0;
@@ -94,10 +108,12 @@ public class PigGame
     public void playerHolds() {
         playerScore = playerScore + roundScore;
         roundScore = 0;
+        computerTurn();
     }
     public void computerTurn() {
         System.out.println("COMPUTER TURN");
         while (!computerWon()) {
+            playersTurn = false;
             rollDice();
             if ((d1.getValue()) == 1 || (d2.getValue() == 1)) {
                 roundScore = 0;
@@ -119,11 +135,12 @@ public class PigGame
         playerScore = 0;
         computerScore = 0;
         roundScore = 0;
-        playersTurn = false;
+        playersTurn = true;
     }
 
     //software testing
     private void playerTurn() {
+        playersTurn = true;
         playerRolls();
         playerHolds();
     }
@@ -132,6 +149,4 @@ public class PigGame
         playerTurn();
         computerTurn();
     }
-
-
 }
